@@ -15,10 +15,10 @@ export class UserFormComponent implements OnInit {
   constructor(private formBuilder: FormBuilder, private userService: UserService) {
     this.userForm = this.formBuilder.group({
       id: [0],
-      name: ['', Validators.maxLength(100)],
-      age: ['', Validators.compose([Validators.min(16), Validators.max(100)])],
-      salary: ['', Validators.compose([Validators.min(2000), Validators.max(10000)])],
-      address: ['', Validators.maxLength(100)]
+      name: ['', [Validators.required, Validators.maxLength(100)]],
+      age: ['', [Validators.required,Validators.compose([Validators.min(16), Validators.max(100)])]],
+      salary: ['', [Validators.required,Validators.compose([Validators.min(2000), Validators.max(10000)])]],
+      address: ['', [Validators.required,Validators.maxLength(100)]]
     });
   }
 
@@ -35,6 +35,10 @@ export class UserFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (this.userForm.invalid) {
+      return;
+    }
+  
     const user: User = this.userForm.value;
     if (this.isEdit) {
       this.userService.updateUser(user);
@@ -43,4 +47,5 @@ export class UserFormComponent implements OnInit {
     }
     this.userForm.reset();
   }
+  
 }
